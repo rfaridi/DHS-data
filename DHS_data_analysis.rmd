@@ -1,0 +1,10 @@
+---
+title: "A test file"
+---
+
+Here are some tests being done
+
+```{r}
+rnorm(10)
+```
+
