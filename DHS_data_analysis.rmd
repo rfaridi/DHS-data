@@ -1,10 +1,35 @@
 ---
-title: "A test file"
+title: "DHS data analysis"
 ---
 
-Here are some tests being done
+
+# 28th June, 2020
+
+Let's first load the libraries 
 
 ```{r}
-rnorm(10)
+library(tidyverse)
+library(haven)
 ```
+
+
+```{r}
+fac17 <- read_dta("./rawdata/dhs_facility_spa_2017.dta")
+```
+
+Let's have a look at the data
+
+```{r}
+dim(fac17)
+```
+
+Too many variables, let's just have a look at some of the few.
+
+```{r}
+head(names(fac17))
+```
+
+It's time to get hold of the questionnaire
+
+
 
