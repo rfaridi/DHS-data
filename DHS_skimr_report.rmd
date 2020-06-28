@@ -1,0 +1,53 @@
+---
+title: "DHS facility survey"
+author: "Rushad Faridi, PhD"
+---
+
+
+```{r setup, echo=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(labelled)
+library(skimr)
+opts_chunk$set(comment=NA, warning=FALSE, echo=FALSE, message=FALSE, results="asis", cache=FALSE, prompt=FALSE)
+fac17 <- readRDS("./rdata/fac17.rds")
+```
+
+```{r}
+fac17_small <- fac17 %>% 
+                 select(-contains("_"))  %>% 
+		 unlabelled()
+```
+
+
+
+
+```{r, eval=T, echo=T}
+fac17_label <- fac17_small %>% 
+                       lapply(attr, which="label") %>% 
+		       lapply(function(x) ifelse(is.null(x), "", x)) %>% 
+		       unlist() %>% 
+		       tibble::enframe()  %>% 
+		       rename(var_name=name, 
+			      var_label=value)
+
+
+```
+
+
+
+```{r, echo=T, eval=T }
+kable(fac17_label, format="html")  %>% 
+      kable_styling(full_width=TRUE) 
+```
+
+
+# Data description
+
+```{r}
+skim(fac17_small) 
+```
+
+
+
