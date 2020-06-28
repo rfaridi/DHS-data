@@ -1,0 +1,128 @@
+---
+title: "DHS data analysis"
+---
+
+
+# 28th June, 2020
+
+
+## Set up of the data 
+
+Let's first load the libraries 
+
+```{r}
+library(tidyverse)
+library(haven)
+```
+
+
+```{r}
+fac17 <- read_dta("./rawdata/dhs_facility_spa_2017.dta")
+```
+
+Let's have a look at the data
+
+```{r}
+dim(fac17)
+```
+
+Too many variables, let's just have a look at some of the few.
+
+```{r}
+head(names(fac17))
+```
+
+## Questionnaire documentation
+
+It's time to get hold of the questionnaire
+
+Documentation of on SPA survey is available [here](https://dhsprogram.com/What-We-Do/Survey-Types/SPA.cfm).
+
+
+### Overview of SPA
+
+Now from the the above site we can find following information: 
+
+The Service Provision Assessment (SPA) survey is a health facility assessment that provides a comprehensive overview of a country’s health service delivery.  SPA surveys fill an urgent need for monitoring health system strengthening in developing countries.  They collect information on the overall availability of different facility-based health services in a country and their readiness to provide those services.  The inventory questionnaire collects information for the calculation of USAID and WHO’s service readiness indicators.
+ 
+
+SPA surveys answer 4 broad groups of questions:
+
+* What is the availability of different health services in a country?  Specifically, what proportions of the different facility types offer specific health services?
+* To what extent are facilities prepared to provide health services?  Do facilities have the necessary infrastructure, resources and support systems available?  For example, what proportions of facilities have regular electricity?  What proportions have regular water supply?
+* To what extent does the service delivery process follow generally accepted standards of care?  Does the process followed in service delivery meet standards of acceptable quality and content?
+Are clients and service providers satisfied with the service delivery environment?
+
+The key services and topics assessed in a SPA survey are:
+
+* Infrastructure, Resources, and Systems: water, electricity, latrines, infection control, management systems, storage and stock monitoring for vaccines, contraceptives, and medicines, infection control
+
+* Child Health: availability of vaccines, medicines, and Vitamin A, availability of curative care services and the availability of equipment and supplies for outpatient care, adherence to guidelines for sick child care
+
+* Maternal and Newborn Health: availability and appropriate assessment of clients for antenatal care, delivery services, newborn care, emergency obstetric care
+
+* Family Planning: availability of contraceptives and supplies, user fees, counseling and client assessment, provision of STI treatment for family planning clients
+
+* HIV/AIDS: availability HIV testing services, HIV/AIDS care and support services, antiretroviral treatment, prevention of mother-to-child-transmission, post-exposure prophylaxis
+Sexually Transmitted Infections (STIs)
+
+* Malaria: availability of malaria diagnostic and treatment services, guidelines, antimalarial, laboratory diagnostic capacity
+Tuberculosis: availability of TB diagnostic services, availability of first line medicines for treating TB
+
+* Basic surgery 
+
+* Non-communicable diseases:  diabetes, cardiovascular diseases and chronic respiratory diseases
+ 
+###  Methodology of SPA
+
+SPA surveys are sample surveys of formal sector health facilities.  Pharmacies and individual doctors’ offices are typically not included in SPA surveys.  Typically, SPA surveys collect data from 400-700 facilities, selected from a comprehensive list of health facilities in a country (sampling frame), categorized by facility type, managing authority (public and non-public), and by region.  The sample is selected to provide indicators at the national level for the different facility types and managing authority as well as aggregate indicators at the regional level.  SPA surveys can also be done in a census of facilities, depending on the total number of facilities in the country.
+
+Usually, hospitals are oversampled as they exist in small numbers in a country.  Subsequently, the data are weighted during analysis in order to ensure that the data are proportionally representative when presented.  To do this, a multiplier (weight) is applied to the data to ensure that the contribution of facilities to the total is proportionate to their existence in the country.
+
+SPA surveys are typically fielded by 10–15 teams; each comprised of 3-4 interviewers mostly health workers.  These interviewers collect data from the facility in-charge and the most knowledgeable person(s) available for each service using the inventory questionnaire. Specific sections of the inventory questionnaire assess laboratories and pharmacies in these health facilities.  A key feature of the inventory questionnaire is that interviewers verify the existence of items that are being assessed; for example, are the medicines and commodities available at the time of the visit?
+
+Interviewers also observe client-provider consultations for three priority services using observation protocols:  antenatal care, family planning, and curative care for sick children.  The number of consultations observed depends on the number of providers and clients in the facility that day.  Interviewers also interview clients who were observed when leaving the facility with the client exit interview questionnaires.
+
+Some or all of the health providers working at facilities are interviewed with the health worker interview questionnaire.
+
+
+**12:49 PM**
+
+trying to see whether i can connect the questionnaire with variables. Let's whether question numbers are present or not: 
+
+```{r}
+str_subset(names(fac17),"101")
+str_subset(names(fac17),"102")
+```
+
+The do file includes all the labelling and I actually can see the labels down here. 
+
+For example using the labelled package:
+
+```{r}
+var_label(fac17$q101h)
+var_label(fac17$q101m)
+```
+
+**14:03 PM**
+
+We can also check the value labels
+
+```{r}
+head(fac17$q102_01)
+```
+
+Let's try to figure out whether we can form a label data set. 
+
+```{r}
+fac17_label <- fac17 %>% 
+                       lapply(attr, which="label") %>% 
+		       lapply(function(x) ifelse(is.null(x), "", x)) %>% 
+		       unlist() %>% 
+		       tibble::enframe()  %>% 
+		       rename(var_name=name, 
+			      var_label=value)
+
+
+```
+
