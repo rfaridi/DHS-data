@@ -11,7 +11,7 @@
 
 
 
-<title>A test file</title>
+<title>DHS data analysis</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -374,15 +374,25 @@ summary {
 
 
 
-<h1 class="title toc-ignore">A test file</h1>
+<h1 class="title toc-ignore">DHS data analysis</h1>
 
 </div>
 
 
-<p>Here are some tests being done</p>
-<pre class="r"><code>rnorm(10)</code></pre>
-<pre><code>##  [1]  0.23781708  0.24177243  1.08115268 -0.16668727  0.29945001 -0.02137331
-##  [7]  0.38295894  0.63528683 -0.20165658 -2.60782082</code></pre>
+<div id="th-june-2020" class="section level1">
+<h1>28th June, 2020</h1>
+<p>Let’s first load the libraries</p>
+<pre class="r"><code>library(tidyverse)
+library(haven)</code></pre>
+<pre class="r"><code>fac17 &lt;- read_dta(&quot;./rawdata/dhs_facility_spa_2017.dta&quot;)</code></pre>
+<p>Let’s have a look at the data</p>
+<pre class="r"><code>dim(fac17)</code></pre>
+<pre><code>## [1] 1600 2397</code></pre>
+<p>Too many variables, let’s just have a look at some of the few.</p>
+<pre class="r"><code>head(names(fac17))</code></pre>
+<pre><code>## [1] &quot;facil&quot;    &quot;rec_type&quot; &quot;region&quot;   &quot;district&quot; &quot;factype&quot;  &quot;mga&quot;</code></pre>
+<p>It’s time to get hold of the questionnaire</p>
+</div>
 
 
 
