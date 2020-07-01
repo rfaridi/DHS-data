@@ -6,6 +6,7 @@ title: "DHS data analysis"
 # 28th June, 2020
 
 
+
 ## Set up of the data 
 
 Let's first load the libraries 
@@ -13,6 +14,7 @@ Let's first load the libraries
 ```{r}
 library(tidyverse)
 library(haven)
+library(labelled)
 ```
 
 
@@ -126,3 +128,49 @@ fac17_label <- fac17 %>%
 
 ```
 
+# 1 July , 2020 
+
+So far what have been done 
+
+* dataMaid report 
+* summarytools report 
+* skimr report
+
+## The WHO health facility document
+
+This document is available [here](./docs/facilityanalysis-generalprinciples.pdf)
+
+Let's have a look at the WHO report 
+
+Here is the structure: 
+
+* Introduction 
+* Data quality 
+* Core facility indicators
+* Population estimates
+* Key analytical concepts
+* Presentation and communication
+
+###  WHAT IS MEANT BY ROUTINE HEALTH FACILITY DATA?
+* Routine health facility data are collected at clinics, hospitals and other health service points (public at the time that services are provided.  
+
+* These data are processed at the 
+health facility and summary reports are sent to the appropriate administrative authority. 
+
+### USES AND VIRTUES OF ROUTINE HEALTH FACILITY DATA   
+
+* Routine health facility data are widely used for national and sub-national health sector reviews and planning.  
+* They form the basis of national annual reports of health statistics and periodic analytical reviews of health system performance
+* They are used to assess health program at all levels of the 
+health system.  
+* Analysts and program managers use routine health facility data 
+    + to measure levels, 
+    + study trends
+    + assess geographic differences for a range of standard health indicators related to 
+	* service delivery, 
+	* coverage of interventions and 
+	* the leading diagnoses among clients. 
+* Analysts often construct summary indices by aggregating several of these indicators:  
+   + in order to compare health 
+	+ system performance over time 
+	+ among regions or districts.  

@@ -381,9 +381,12 @@ summary {
 
 <div id="th-june-2020" class="section level1">
 <h1>28th June, 2020</h1>
+<div id="set-up-of-the-data" class="section level2">
+<h2>Set up of the data</h2>
 <p>Let’s first load the libraries</p>
 <pre class="r"><code>library(tidyverse)
-library(haven)</code></pre>
+library(haven)
+library(labelled)</code></pre>
 <pre class="r"><code>fac17 &lt;- read_dta(&quot;./rawdata/dhs_facility_spa_2017.dta&quot;)</code></pre>
 <p>Let’s have a look at the data</p>
 <pre class="r"><code>dim(fac17)</code></pre>
@@ -391,7 +394,133 @@ library(haven)</code></pre>
 <p>Too many variables, let’s just have a look at some of the few.</p>
 <pre class="r"><code>head(names(fac17))</code></pre>
 <pre><code>## [1] &quot;facil&quot;    &quot;rec_type&quot; &quot;region&quot;   &quot;district&quot; &quot;factype&quot;  &quot;mga&quot;</code></pre>
+</div>
+<div id="questionnaire-documentation" class="section level2">
+<h2>Questionnaire documentation</h2>
 <p>It’s time to get hold of the questionnaire</p>
+<p>Documentation of on SPA survey is available <a href="https://dhsprogram.com/What-We-Do/Survey-Types/SPA.cfm">here</a>.</p>
+<div id="overview-of-spa" class="section level3">
+<h3>Overview of SPA</h3>
+<p>Now from the the above site we can find following information:</p>
+<p>The Service Provision Assessment (SPA) survey is a health facility assessment that provides a comprehensive overview of a country’s health service delivery. SPA surveys fill an urgent need for monitoring health system strengthening in developing countries. They collect information on the overall availability of different facility-based health services in a country and their readiness to provide those services. The inventory questionnaire collects information for the calculation of USAID and WHO’s service readiness indicators.</p>
+<p>SPA surveys answer 4 broad groups of questions:</p>
+<ul>
+<li>What is the availability of different health services in a country? Specifically, what proportions of the different facility types offer specific health services?</li>
+<li>To what extent are facilities prepared to provide health services? Do facilities have the necessary infrastructure, resources and support systems available? For example, what proportions of facilities have regular electricity? What proportions have regular water supply?</li>
+<li>To what extent does the service delivery process follow generally accepted standards of care? Does the process followed in service delivery meet standards of acceptable quality and content? Are clients and service providers satisfied with the service delivery environment?</li>
+</ul>
+<p>The key services and topics assessed in a SPA survey are:</p>
+<ul>
+<li><p>Infrastructure, Resources, and Systems: water, electricity, latrines, infection control, management systems, storage and stock monitoring for vaccines, contraceptives, and medicines, infection control</p></li>
+<li><p>Child Health: availability of vaccines, medicines, and Vitamin A, availability of curative care services and the availability of equipment and supplies for outpatient care, adherence to guidelines for sick child care</p></li>
+<li><p>Maternal and Newborn Health: availability and appropriate assessment of clients for antenatal care, delivery services, newborn care, emergency obstetric care</p></li>
+<li><p>Family Planning: availability of contraceptives and supplies, user fees, counseling and client assessment, provision of STI treatment for family planning clients</p></li>
+<li><p>HIV/AIDS: availability HIV testing services, HIV/AIDS care and support services, antiretroviral treatment, prevention of mother-to-child-transmission, post-exposure prophylaxis Sexually Transmitted Infections (STIs)</p></li>
+<li><p>Malaria: availability of malaria diagnostic and treatment services, guidelines, antimalarial, laboratory diagnostic capacity Tuberculosis: availability of TB diagnostic services, availability of first line medicines for treating TB</p></li>
+<li><p>Basic surgery</p></li>
+<li><p>Non-communicable diseases: diabetes, cardiovascular diseases and chronic respiratory diseases</p></li>
+</ul>
+</div>
+<div id="methodology-of-spa" class="section level3">
+<h3>Methodology of SPA</h3>
+<p>SPA surveys are sample surveys of formal sector health facilities. Pharmacies and individual doctors’ offices are typically not included in SPA surveys. Typically, SPA surveys collect data from 400-700 facilities, selected from a comprehensive list of health facilities in a country (sampling frame), categorized by facility type, managing authority (public and non-public), and by region. The sample is selected to provide indicators at the national level for the different facility types and managing authority as well as aggregate indicators at the regional level. SPA surveys can also be done in a census of facilities, depending on the total number of facilities in the country.</p>
+<p>Usually, hospitals are oversampled as they exist in small numbers in a country. Subsequently, the data are weighted during analysis in order to ensure that the data are proportionally representative when presented. To do this, a multiplier (weight) is applied to the data to ensure that the contribution of facilities to the total is proportionate to their existence in the country.</p>
+<p>SPA surveys are typically fielded by 10–15 teams; each comprised of 3-4 interviewers mostly health workers. These interviewers collect data from the facility in-charge and the most knowledgeable person(s) available for each service using the inventory questionnaire. Specific sections of the inventory questionnaire assess laboratories and pharmacies in these health facilities. A key feature of the inventory questionnaire is that interviewers verify the existence of items that are being assessed; for example, are the medicines and commodities available at the time of the visit?</p>
+<p>Interviewers also observe client-provider consultations for three priority services using observation protocols: antenatal care, family planning, and curative care for sick children. The number of consultations observed depends on the number of providers and clients in the facility that day. Interviewers also interview clients who were observed when leaving the facility with the client exit interview questionnaires.</p>
+<p>Some or all of the health providers working at facilities are interviewed with the health worker interview questionnaire.</p>
+<p><strong>12:49 PM</strong></p>
+<p>trying to see whether i can connect the questionnaire with variables. Let’s whether question numbers are present or not:</p>
+<pre class="r"><code>str_subset(names(fac17),&quot;101&quot;)</code></pre>
+<pre><code>##  [1] &quot;q101h&quot;   &quot;q101m&quot;   &quot;q1010&quot;   &quot;q1011&quot;   &quot;q1012_1&quot; &quot;q1012_2&quot; &quot;q1012_3&quot;
+##  [8] &quot;q1012_4&quot; &quot;q1012_5&quot; &quot;q1012_6&quot; &quot;q1013&quot;   &quot;q1014&quot;   &quot;q1015&quot;   &quot;q1016a&quot; 
+## [15] &quot;q1016b&quot;  &quot;q1017&quot;   &quot;q1018&quot;   &quot;q1019&quot;   &quot;q1101a&quot;  &quot;q1101b&quot;</code></pre>
+<pre class="r"><code>str_subset(names(fac17),&quot;102&quot;)</code></pre>
+<pre><code>##  [1] &quot;q102_01&quot; &quot;q102_02&quot; &quot;q102_03&quot; &quot;q102_04&quot; &quot;q102_05&quot; &quot;q102_06&quot; &quot;q102_07&quot;
+##  [8] &quot;q102_08&quot; &quot;q102_09&quot; &quot;q102_10&quot; &quot;q102_11&quot; &quot;q102_12&quot; &quot;q102_13&quot; &quot;q102_14&quot;
+## [15] &quot;q102_15&quot; &quot;q102_16&quot; &quot;q102_17&quot; &quot;q102_18&quot; &quot;q102_19&quot; &quot;q102_20&quot; &quot;q102_21&quot;
+## [22] &quot;q102_22&quot; &quot;q102_23&quot; &quot;q1020&quot;   &quot;q1021&quot;   &quot;q1022a&quot;  &quot;q1022b&quot;  &quot;q1023&quot;  
+## [29] &quot;q1024&quot;   &quot;q1025&quot;   &quot;q1026&quot;   &quot;q1027&quot;   &quot;q1102&quot;</code></pre>
+<p>The do file includes all the labelling and I actually can see the labels down here.</p>
+<p>For example using the labelled package:</p>
+<pre class="r"><code>var_label(fac17$q101h)</code></pre>
+<pre><code>## [1] &quot;start hour&quot;</code></pre>
+<pre class="r"><code>var_label(fac17$q101m)</code></pre>
+<pre><code>## [1] &quot;start minute&quot;</code></pre>
+<p><strong>14:03 PM</strong></p>
+<p>We can also check the value labels</p>
+<pre class="r"><code>head(fac17$q102_01)</code></pre>
+<pre><code>## &lt;Labelled double&gt;: services table
+## [1] 1 1 2 1 1 2
+## 
+## Labels:
+##  value label
+##      1   yes
+##      2    no</code></pre>
+<p>Let’s try to figure out whether we can form a label data set.</p>
+<pre class="r"><code>fac17_label &lt;- fac17 %&gt;% 
+                       lapply(attr, which=&quot;label&quot;) %&gt;% 
+               lapply(function(x) ifelse(is.null(x), &quot;&quot;, x)) %&gt;% 
+               unlist() %&gt;% 
+               tibble::enframe()  %&gt;% 
+               rename(var_name=name, 
+                  var_label=value)</code></pre>
+</div>
+</div>
+</div>
+<div id="july-2020" class="section level1">
+<h1>1 July , 2020</h1>
+<p>So far what have been done</p>
+<ul>
+<li>dataMaid report</li>
+<li>summarytools report</li>
+<li>skimr report</li>
+</ul>
+<div id="the-who-health-facility-document" class="section level2">
+<h2>The WHO health facility document</h2>
+<p>This document is available <a href="./docs/facilityanalysis-generalprinciples.pdf">here</a></p>
+<p>Let’s have a look at the WHO report</p>
+<p>Here is the structure:</p>
+<ul>
+<li>Introduction</li>
+<li>Data quality</li>
+<li>Core facility indicators</li>
+<li>Population estimates</li>
+<li>Key analytical concepts</li>
+<li>Presentation and communication</li>
+</ul>
+<div id="what-is-meant-by-routine-health-facility-data" class="section level3">
+<h3>WHAT IS MEANT BY ROUTINE HEALTH FACILITY DATA?</h3>
+<ul>
+<li><p>Routine health facility data are collected at clinics, hospitals and other health service points (public at the time that services are provided.</p></li>
+<li><p>These data are processed at the health facility and summary reports are sent to the appropriate administrative authority.</p></li>
+</ul>
+</div>
+<div id="uses-and-virtues-of-routine-health-facility-data" class="section level3">
+<h3>USES AND VIRTUES OF ROUTINE HEALTH FACILITY DATA</h3>
+<ul>
+<li>Routine health facility data are widely used for national and sub-national health sector reviews and planning.<br />
+</li>
+<li>They form the basis of national annual reports of health statistics and periodic analytical reviews of health system performance</li>
+<li>They are used to assess health program at all levels of the health system.<br />
+</li>
+<li>Analysts and program managers use routine health facility data
+<ul>
+<li>to measure levels,</li>
+<li>study trends</li>
+<li>assess geographic differences for a range of standard health indicators related to</li>
+<li>service delivery,</li>
+<li>coverage of interventions and</li>
+<li>the leading diagnoses among clients.</li>
+</ul></li>
+<li>Analysts often construct summary indices by aggregating several of these indicators:
+<ul>
+<li>in order to compare health</li>
+<li>system performance over time</li>
+<li>among regions or districts.</li>
+</ul></li>
+</ul>
+</div>
+</div>
 </div>
 
 
