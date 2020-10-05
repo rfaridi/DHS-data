@@ -1,0 +1,29 @@
+---
+title: "DHS facility survey"
+author: "Rushad Faridi, PhD"
+---
+
+
+```{r setup, echo=FALSE}
+library(tidyverse)
+library(knitr)
+library(labelled)
+library(memisc)
+opts_chunk$set(comment=NA, warning=FALSE, echo=FALSE, message=FALSE, results="asis", cache=FALSE, prompt=FALSE)
+fac17 <- readRDS("./rdata/fac17.rds")
+```
+
+```{r}
+fac17_small <- fac17 %>% 
+                 dplyr::select(-contains("_"))  %>% 
+		 unlabelled()
+```
+
+
+# Descriptive stats
+
+```{r}
+codebook(fac17_small)
+```
+
+
